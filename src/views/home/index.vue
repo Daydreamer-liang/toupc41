@@ -2,12 +2,14 @@
   <!-- 先在最外层放一个大容器 -->
   <el-container>
     <!-- 左侧 -->
-    <el-aside>
-      <h1>左侧</h1>
+    <el-aside  style="width: 230px">
+      <Left-navigation></Left-navigation>
     </el-aside>
     <el-container>
       <!-- 顶部 -->
-      <el-header>顶部</el-header>
+      <el-header>
+        <Right-Header></Right-Header>
+      </el-header>
       <!-- ：底栏容器。  -->
       <el-main
         >主要区域
@@ -19,7 +21,9 @@
 </template>
 
 <script>
-export default {}
+export default {
+
+}
 </script>
 
 <style>

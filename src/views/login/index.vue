@@ -71,11 +71,13 @@ export default {
             message: '验证码应该是6位数字'
           }
         ],
-        checked: [{
-          validator: function (rule, value, callback) {
-            value ? callback() : callback(new Error('你必须同意'))
+        checked: [
+          {
+            validator: function (rule, value, callback) {
+              value ? callback() : callback(new Error('你必须同意'))
+            }
           }
-        }]
+        ]
       }
     }
   },
@@ -83,6 +85,22 @@ export default {
     login () {
       this.$refs.loginForm.validate().then(() => {
         console.log(1)
+        // 请求数据
+        this.$axios({
+          url: '/authorizations',
+          data: this.loginForm,
+          method: 'post'
+        })
+          .then((result) => {
+            console.log(result.data)
+            // 把token存在本地缓存
+            window.localStorage.setItem('user-token', result.data.data.token)
+            // 跳转到主页
+            this.$router.push('/home')
+          })
+          .catch(() => {
+            this.$message.error('错了哦，这是一条错误消息')
+          })
       })
     }
   }

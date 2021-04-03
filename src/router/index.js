@@ -11,9 +11,15 @@ const routes = [
     path: '/home', // 主页
     component: Home,
     children: [
+      // 二级路由
       {
-        path: '', // 写空是 默认二级路由的主页
+        path: '', //
         component: SecondHome
+      },
+      {
+        // path: "/home/comment", // ping评论
+        path: 'comment', // 简写
+        component: () => import('@/views/comment')// 缓存
       }
     ]
   },

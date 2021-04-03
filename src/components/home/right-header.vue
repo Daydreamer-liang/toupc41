@@ -47,14 +47,15 @@ export default {
   },
   created () {
     //   获取用户信息
-    const token = localStorage.getItem('user-token')
+    // const token = localStorage.getItem('user-token')
     this.$axios({
-      url: '/user/profile',
-      Headers: {
-        Authorization: `Bearer ${token}`
-      }
+      url: '/user/profile'
+      //   Headers: {
+      //     Authorization: `Bearer ${token}`
+      //   } 这里删掉是因为 utils 文件 统一注册了 token
     }).then((result) => {
-      this.userInfo = result.data.data
+    //   this.userInfo = result.data.data 拦截器有一个data  脱掉了一层data
+      this.userInfo = result.data
     })
   }
 }

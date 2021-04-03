@@ -94,7 +94,7 @@ export default {
           .then((result) => {
             console.log(result.data)
             // 把token存在本地缓存
-            window.localStorage.setItem('user-token', result.data.data.token)
+            window.localStorage.setItem('user-token', result.data.token)
             // 跳转到主页
             this.$router.push('/home')
           })

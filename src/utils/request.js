@@ -1,7 +1,14 @@
 // 对axios二次封装   做 拦截器
 // 引入 在中间写拦截器  在导出  以后用axios 用导出的
 import axios from 'axios'
+import JSONBig from 'json-bigint' // 引入处理大数字的包
 // import router from '@/router'
+axios.defaults.transformResponse = [
+  // 大数字的处理
+  function (data) {
+    return data ? JSONBig.parse('data') : {}
+  }
+]
 axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0'
 // 请求拦截器
 // axios.interceptors.request.use(); 里面两个函数 成功执行第一个，失败执行第二个

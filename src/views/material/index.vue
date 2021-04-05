@@ -92,6 +92,16 @@
         </div>
       </el-tab-pane>
     </el-tabs>
+    <!-- 分页组件 -->
+    <el-row type="flex" justify="center" align="middle" style="height: 80px">
+      <el-pagination
+        background
+        layout="prev, pager, next"
+        :total="page.total"
+        @current-change="currentchange"
+      >
+      </el-pagination>
+    </el-row>
   </el-card>
 </template>
 
@@ -100,19 +110,30 @@ export default {
   data () {
     return {
       activeName: 'all',
-      list: [] // 素材数据
+      list: [], // 素材数据
+      page: {
+        total: 1000,
+        pagesize: 10,
+        currentpage: 1
+      }
     }
   },
   methods: {
+    //   分页切换 获取数据
+    currentchange (newpage) {
+      this.page.currentpage = newpage
+      this.alltabclick()
+    },
     alltabclick () {
       //   获取全部素材数据
       this.$axios({
         url: '/user/images',
         params: {
-          collect: this.activeName === 'all' // 全部图片
+          collect: this.activeName === 'sc' // 全部图片
         }
       }).then((result) => {
         this.list = result.data
+        this.page.total = result.data.total
       })
     },
     tabclick () {
@@ -122,6 +143,7 @@ export default {
   },
   created () {
     // 获取素材数据
+    this.page.currentpage = 1
     console.log(123)
     this.alltabclick()
   }

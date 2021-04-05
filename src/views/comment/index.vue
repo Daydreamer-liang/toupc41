@@ -21,6 +21,19 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-row style="height: 80px" type="flex" align="middle" justify="center">
+      <!-- 分页 -->
+
+      <el-pagination
+        background
+        layout="prev, pager, next"
+        :total="page.total"
+        :current-page="page.currentpage"
+        :page-size="page.pagesize"
+        @current-change="currentchange"
+      >
+      </el-pagination>
+    </el-row>
   </el-card>
 </template>
 
@@ -49,16 +62,29 @@ export default {
           name: '王小虎4',
           address: '打开'
         }
-      ]
+      ],
+      //   分页数据
+      page: {
+        total: 1000, // 总条目数
+        pagesize: 10, // 每页显示条目个数
+        currentpage: 1 // 当前页数
+      }
     }
   },
   methods: {
+    //   分页
+    currentchange (newpage) {
+      this.page.currentpage = newpage
+      this.gitComment()
+    },
     //   获取评论数据
     gitComment () {
       this.$axios({
         url: '/articles',
         params: {
-          response_type: 'comment '
+          response_type: 'comment ',
+          page: this.page.currentpage,
+          per_page: this.pege.pagesize
         }
       }).then((result) => {
         // 评论数据
@@ -80,11 +106,12 @@ export default {
         // type: 'warning'
       })
         .then(
+          // 获取评论数据
           this.$axios({
             url: '/comments/status',
             method: 'put',
             params: {
-              article_id: row.id
+              article_id: row.id.toString()
             },
             data: {
               allow_comment: !row.common_status

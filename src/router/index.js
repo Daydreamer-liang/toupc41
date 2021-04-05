@@ -17,9 +17,14 @@ const routes = [
         component: SecondHome
       },
       {
-        // path: "/home/comment", // ping评论
+        // path: "/home/comment", // ping评论列表
         path: 'comment', // 简写
-        component: () => import('@/views/comment')// 缓存
+        component: () => import('@/views/comment') // 缓存
+      },
+      {
+        // 素材列表的路由
+        path: 'material', // 简写
+        component: () => import('@/views/material') // 缓存
       }
     ]
   },

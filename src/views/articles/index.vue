@@ -1,0 +1,113 @@
+<template>
+  <!-- 内容列表 -->
+  <el-card class="articles">
+    <!-- 使用 components 文件下 common的面包屑导航 -->
+    <Bread-Crumb slot="header">
+      <template slot="title"> 内容管理 </template>
+    </Bread-Crumb>
+    <el-form style="padding-left: 55px">
+      <el-form-item label="文章状态">
+        <!-- 单选按钮 -->
+        <el-radio-group v-model="seachForm.status">
+          <el-radio :label="5">全部</el-radio>
+          <el-radio :label="0">草稿</el-radio>
+          <el-radio :label="1">待审核</el-radio>
+          <el-radio :label="2">审核通过</el-radio>
+          <el-radio :label="3">审核失败</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="频道管理">
+        <el-select placeholder="请选择频道">
+          <el-option> </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="时间选择">
+        <div class="block">
+          <el-date-picker
+            v-model="seachForm.dateRange"
+            type="daterange"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          >
+          </el-date-picker>
+        </div>
+      </el-form-item>
+    </el-form>
+    <el-row class="row" type="flex" align="middle">
+      <span>共找到1378条符合条件的内容</span>
+    </el-row>
+    <!-- 列表 -->
+    <div class="article-item" v-for="item in 10 " :key="item">
+      <!-- 左侧内容 -->
+      <div class="left">
+        <img
+          src="https://img1.baidu.com/it/u=50787246,2279973100&fm=26&fmt=auto&gp=0.jpg"
+          alt=""
+        />
+        <div class="info">
+          <span>333</span>
+          <el-tag class="tag">草稿</el-tag>
+          <span>2010/10/20</span>
+        </div>
+      </div>
+      <!-- 右侧内容 -->
+      <div class="right">
+        <i class="el-icon-edit">修改</i>
+        <i class="el-icon-delete">删除</i>
+      </div>
+    </div>
+  </el-card>
+</template>
+
+<script>
+export default {
+  data () {
+    return {
+      seachForm: {
+        status: 5, // 默认全部状态
+        change_id: null, // 表示没有任何频道
+        dateRange: [] // 时间
+      },
+      channels: [] // 频道数据
+    }
+  }
+}
+</script>
+
+<style lang="less" scoped>
+.row {
+  height: 60px;
+  border-bottom: dashed 1px #ccc;
+}
+.article-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 0;
+  border-bottom: solid 1px #ccc;
+  .left {
+    display: flex;
+    img {
+      width: 180px;
+      height: 100px;
+    }
+    .info {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      padding-left: 20px;
+      .tag {
+        width: 50px;
+        text-align: center;
+      }
+    }
+  }
+  .right {
+    i {
+      font-size: 12px;
+      padding-right: 20px;
+      cursor: pointer;
+      user-select: none; //css控制页面文字不能被选中user-select:none;
+    }
+  }
+}
+</style>

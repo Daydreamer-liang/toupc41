@@ -108,6 +108,21 @@
       >
       </el-pagination>
     </el-row>
+    <!-- 弹层组件 -->
+    <el-dialog
+      title="提示"
+      :visible="dialogvisible"
+      @close="dialogvisible = false"
+      width="30%"
+      :before-close="handleClose"
+    >
+      <el-carousel    height="400px" indicator-position="outside"  >
+        <!-- 走马灯 -->
+        <el-carousel-item  v-for="item in list" :key="item">
+          <h3 class="medium">{{ item }}</h3>
+        </el-carousel-item>
+      </el-carousel>
+    </el-dialog>
   </el-card>
 </template>
 
@@ -121,7 +136,8 @@ export default {
         total: 1000,
         pagesize: 10,
         currentpage: 1
-      }
+      },
+      dialogvisible: true
     }
   },
   methods: {

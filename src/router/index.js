@@ -25,6 +25,11 @@ const routes = [
         // 素材列表的路由
         path: 'material', // 简写
         component: () => import('@/views/material') // 缓存
+      },
+      {
+        // 内容列表的路由
+        path: 'articles', // 简写
+        component: () => import('@/views/articles') // 缓存
       }
     ]
   },

@@ -5,6 +5,12 @@
     <Bread-Crumb slot="header">
       <template slot="title"> 素材管理 </template>
     </Bread-Crumb>
+    <el-row type="flex" justify="end">
+      <!-- httprequest 上传图片 -->
+      <el-upload action="" :http-request="httprequest" :show-file-list="false">
+        <el-button size="small" type="primary">点击上传</el-button>
+      </el-upload>
+    </el-row>
     <!-- {{ activeName }} -->
     <el-tabs v-model="activeName" @tab-click="tabclick">
       <el-tab-pane label="全部素材" name="all">
@@ -33,8 +39,8 @@
               justify="space-around"
               align="middle"
             >
-              <i class="el-icon-star-on"></i>
-              <i class="el-icon-delete"></i>
+              <i @click="addimg(item)" class="el-icon-star-on"></i>
+              <i @click="delimg(item)" class="el-icon-delete"></i>
             </el-row>
           </el-card>
           <el-card class="elcard">
@@ -119,6 +125,54 @@ export default {
     }
   },
   methods: {
+    //   删除图片
+    delimg (item) {
+      this.$confrim('确定删除吗', '提示').then(() => {
+        this.$axios({
+          url: `/user/images/${item.id}`,
+          method: 'delete'
+        })
+          .then(() => {
+            this.alltabclick()
+          })
+          .catch(() => {
+            this.$message.error('操作失败')
+          })
+      })
+    },
+    //   收藏图片
+    addimg (item) {
+      console.log(1)
+      this.$axios({
+        url: `/user/images/${item.id}`,
+        method: 'put',
+        data: {
+          collect: !item.is_collected
+        }
+      })
+        .then(() => {
+          this.alltabclick()
+        })
+        .catch(() => {
+          this.$message.error('操作失败')
+        })
+    },
+    httprequest (params) {
+      //   上传图片，params就是上传的文件
+      const data = new FormData()
+      data.append('image', params.file) // 加入文件参数
+      this.$axios({
+        url: '/user/images',
+        method: 'post',
+        data
+      })
+        .then(() => {
+          this.alltabclick()
+        })
+        .catch(() => {
+          this.$message.error('上传失败')
+        })
+    },
     //   分页切换 获取数据
     currentchange (newpage) {
       this.page.currentpage = newpage

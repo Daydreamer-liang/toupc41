@@ -8,7 +8,10 @@
     <el-form style="padding-left: 55px">
       <el-form-item label="文章状态">
         <!-- 单选按钮 -->
+        <!-- <el-radio-group v-model="seachForm.status" @change="changeCondition"> -->
         <el-radio-group v-model="seachForm.status">
+          <!-- <el-radio-group v-model="seachForm.status"  > -->
+          <!-- 文章状态 0-草稿，1-待审核，2-审核通过，3-审核失败，4-已删除 -->
           <el-radio :label="5">全部</el-radio>
           <el-radio :label="0">草稿</el-radio>
           <el-radio :label="1">待审核</el-radio>
@@ -23,11 +26,13 @@
       </el-form-item>
       <el-form-item label="时间选择">
         <div class="block">
+          <!-- {{ seachForm.dateRange }} -->
           <el-date-picker
             v-model="seachForm.dateRange"
             type="daterange"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
+            value-format="yyyy-MM-dd"
           >
           </el-date-picker>
         </div>
@@ -37,15 +42,18 @@
       <span>共找到1378条符合条件的内容</span>
     </el-row>
     <!-- 列表 -->
-    <div class="article-item" v-for="item in 10 " :key="item">
+    <div class="article-item" v-for="item in 10" :key="item">
       <!-- 左侧内容 -->
       <div class="left">
+        <!-- <img :src="item.img.length ? item.img : imgs" alt="" /> -->
         <img
           src="https://img1.baidu.com/it/u=50787246,2279973100&fm=26&fmt=auto&gp=0.jpg"
           alt=""
         />
         <div class="info">
           <span>333</span>
+          <!-- 文章状态 0-草稿，1-待审核，2-审核通过，3-审核失败，4-已删除 -->
+          <!-- <el-tag class="tag" :type="item.staus |filterscolor">{{item.staus | filtersall }}</el-tag> -->
           <el-tag class="tag">草稿</el-tag>
           <span>2010/10/20</span>
         </div>
@@ -68,7 +76,73 @@ export default {
         change_id: null, // 表示没有任何频道
         dateRange: [] // 时间
       },
+      list: [],
+      //   imgs: require('https://img1.baidu.com/it/u=50787246,2279973100&fm=26&fmt=auto&gp=0.jpg'),
       channels: [] // 频道数据
+    }
+  },
+  watch: {
+    //   监听哪个数据 写哪个
+    seachForm: {
+      deep: true,
+      handler () {
+        this.changeCondition()
+      }
+    }
+  },
+  methods: {
+    //   按条件查找内容
+    changeCondition () {
+      alert(1)
+      const params = {
+        status: this.seachForm.status === 5 ? null : this.seachForm.status,
+        channel_id: this.seachForm.change_id,
+        begin_pubdate: this.seachForm.dateRange.length
+          ? this.seachForm.dateRange[0]
+          : null,
+        end_pubdate:
+          this.seachForm.dateRange.length > 1
+            ? this.seachForm.dateRange[1]
+            : null
+      }
+      this.getArticles(params)
+    },
+    getArticles (params) {
+      //   获取内容
+      this.$axios({
+        url: '/articles',
+        params
+      }).then((result) => {
+        this.list = result.data
+      })
+    }
+  },
+  filters: {
+    filtersall (value) {
+      switch (value) {
+        // 文章状态 0-草稿，1-待审核，2-审核通过，3-审核失败，4-已删除
+        case 0:
+          return '草稿'
+        case 1:
+          return '待审核'
+        case 2:
+          return '审核通过'
+        case 3:
+          return '审核失败'
+      }
+    },
+    filterscolor (value) {
+      switch (value) {
+        // 文章状态 0-草稿，1-待审核，2-审核通过，3-审核失败，4-已删除
+        case 0:
+          return 'success'
+        case 1:
+          return 'info'
+        case 2:
+          return ' '
+        case 3:
+          return 'danger'
+      }
     }
   }
 }

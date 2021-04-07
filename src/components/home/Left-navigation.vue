@@ -54,7 +54,7 @@ export default {}
 .layout-aside {
   background-color: #2e2f32;
   width: 230px;
-  height: 100vh;
+  height: 5000px;
   .title {
     padding: 10px 0;
     text-align: center;

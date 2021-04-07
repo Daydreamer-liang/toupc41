@@ -60,10 +60,26 @@
       </div>
       <!-- 右侧内容 -->
       <div class="right">
-        <i class="el-icon-edit">修改</i>
-        <i class="el-icon-delete">删除</i>
+        <span>
+          <i class="el-icon-edit">修改</i>
+        </span>
+        <span @click="del(item.id.toString())">
+          <i class="el-icon-delete">删除</i>
+        </span>
       </div>
     </div>
+    <el-row type="flex" justify="center" align="middle" style="height: 80px">
+      <!-- <el-row type='flex' justify="center" style='height:80px' align="middle"> -->
+      <el-pagination
+        background
+        layout="prev, pager, next"
+        :total="page.total"
+        :current-page="page.currentpage"
+        :page-size="page.pagesize"
+        @current-change="currentchange"
+      >
+      </el-pagination>
+    </el-row>
   </el-card>
 </template>
 
@@ -71,6 +87,12 @@
 export default {
   data () {
     return {
+      // 分页
+      page: {
+        total: 1000,
+        pagesize: 10,
+        currentpage: 1
+      },
       seachForm: {
         status: 5, // 默认全部状态
         change_id: null, // 表示没有任何频道
@@ -86,22 +108,44 @@ export default {
     seachForm: {
       deep: true,
       handler () {
+        this.page.currentpage = 1
         this.changeCondition()
       }
     }
   },
   methods: {
+    //   删除
+    del (id) {
+      this.$axios({
+        url: `/articles${id}`,
+        method: 'delete'
+      })
+        .then(() => {
+          this.changeCondition()
+        })
+        .catch(() => {
+          this.$message.erorr('删除文章失败')
+        })
+    },
+    //   分页
+    currentchange (newpage) {
+      this.page.currentpage = newpage
+      this.changeCondition()
+    },
     //   按条件查找内容
     changeCondition () {
       alert(1)
       const params = {
+        page: this.page.currentpage,
+        per_page: this.page.pagesize,
         status: this.seachForm.status === 5 ? null : this.seachForm.status,
         channel_id: this.seachForm.change_id,
-        begin_pubdate: this.seachForm.dateRange.length
-          ? this.seachForm.dateRange[0]
-          : null,
+        begin_pubdate:
+          this.seachForm.dateRange && this.seachForm.dateRange.length
+            ? this.seachForm.dateRange[0]
+            : null,
         end_pubdate:
-          this.seachForm.dateRange.length > 1
+          this.seachForm.dateRange && this.seachForm.dateRange.length > 1
             ? this.seachForm.dateRange[1]
             : null
       }
@@ -114,6 +158,7 @@ export default {
         params
       }).then((result) => {
         this.list = result.data
+        this.page.total = result.data.total_count
       })
     }
   },
